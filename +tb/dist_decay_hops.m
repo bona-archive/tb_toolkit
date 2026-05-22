@@ -1,13 +1,13 @@
-function [hops] = make_hops(basis, latvecs, neighbor_order, t_vals, options)
+function [hops] = dist_decay_hops(basis, latvecs, neighbor_order, t, gamma, options)
 
 arguments (Input)
     basis (:,2)
     latvecs (2,2)
     neighbor_order (1,:)
-    t_vals (1,:)
+    t (1,1)
+    gamma (1,1)
     options.doPlot (1,1) logical = false
 end
-assert(size(neighbor_order,2)==size(t_vals,2), 'neighbor_order와 t_vals의 사이즈가 다릅니다.')
 
 
 latvec_x = latvecs(1,:);
@@ -32,15 +32,13 @@ end
 
 [~,~,sub_SUBLAT] = ind2sub(size(x),1:length(D));
 
-i=0;
 hops = [];
 for neighbor_order_ind = 1: length(neighbor_order)
-    i=i+1;
     for a = 1: length(D)
         for b = 1: length(D)
     
             if abs(D(a,b)-sorted_D(neighbor_order(neighbor_order_ind)+1)) < 1e-6
-                hops=[hops;sub_SUBLAT(a),sub_SUBLAT(b),sorted_D(neighbor_order(neighbor_order_ind)+1),t_vals(i)];
+                hops=[hops;sub_SUBLAT(a),sub_SUBLAT(b),sorted_D(neighbor_order(neighbor_order_ind)+1), t*exp(-gamma*sorted_D(neighbor_order(neighbor_order_ind)+1))];
             else
     
             end

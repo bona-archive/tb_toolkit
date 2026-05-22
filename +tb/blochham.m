@@ -4,7 +4,7 @@ function [Hk] = blochham(k_vec, basis, latvecs, hops, onsite)
   % - basis — (n_orb×2) 서브래티스 위치
   % - latvecs — primitive lattice vectors (a1, a2)
   % - hops — (N×4) 테이블 [i, j, dist, t]
-  % - onsite — (n_orb×1) onsite 에너지
+  % - onsite — (n_orb×n_orb) onsite 에너지, diagonal
 
 % output
   % - Hk — (n_orb×n_orb) Hermitian 행렬
@@ -13,7 +13,7 @@ arguments (Input)
     basis (:,2)
     latvecs (2,2)
     hops (:,4)
-    onsite (:,1)
+    onsite (:,:)
 end
 
 assert(size(basis,1) == size(onsite,1), 'basis와 onsite 변수의 sublattice(orbita)의 개수가 다릅니다.')
@@ -24,7 +24,7 @@ n_range = -1:1;
 n_orb = size(basis,1);
 
 %onsite energy
-Hk = diag(onsite);
+Hk = onsite;
 
 % primitive lattice vector a1, a2
 a1 = latvecs(1,:);

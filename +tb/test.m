@@ -3,6 +3,7 @@
 %unit cell
 basis = [sqrt(3)/3,0;
     2*sqrt(3)/3, 0];
+a0 = 1;
 
 % lattice vector
 a1 = [sqrt(3)/2, 1/2];
@@ -10,11 +11,12 @@ a2 = [sqrt(3)/2, -1/2];
 latvecs = [a1;a2];
 
 % onsite potential
-onsite = [0;0];
+onsite = diag([0,0]);
 
 % hopping dist
 neighbor_order = [1];
-t_vals = [1];
+t = -1;
+hops = [1, 2, a0, t]; % [i, j, dist, t]
 
 % high symm points
 kpts = {[0,0],[2*pi/sqrt(3), 2*pi/3],[pi/sqrt(3),pi],[0,0]};
@@ -26,7 +28,7 @@ labels = {'\Gamma','K','M','\Gamma'};
 basis = [[0, 0];              % Site A (Sublattice 1)
 [1/2, sqrt(3)/6];    % Site B (Sublattice 2)
 [0, sqrt(3)/3];];      % Site C (Sublattice 3)
-
+a0 = 1/sqrt(3);
 % lattice vector
 a1 = [1, 0];
 a2 = [1/2, sqrt(3)/2];
@@ -34,17 +36,22 @@ latvecs = [a1;a2];
 
 % onsite potential
 Delta = 0.3;
-onsite = [Delta, 0 , -Delta];
+onsite = diag([Delta, 0 , -Delta]);
 
 % hopping dist
 neighbor_order = [1];
-t_vals = [-1];
+t_ab = -1;
+t_bc = -0.7;
+t_ca = -0.2;
+hops = [1, 2, a0, t_ab;
+        2, 3, a0, t_bc;
+        3, 1, a0, t_ca]; % [i, j, dist, t]
 
 % high symm points
 kpts = {[0,0],[4*pi/3, 0],[pi, pi/sqrt(3)],[0,0]};
 labels = {'\Gamma','K','M','\Gamma'};
 %%
-hops = tb.make_hops(basis, latvecs, neighbor_order, t_vals, doPlot=true);
+% hops = tb.make_hops(basis, latvecs, neighbor_order, t_vals, doPlot=true);
 
 
 N_pts = 100;
