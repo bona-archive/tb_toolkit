@@ -1,4 +1,4 @@
-function [x, y] = lat_2d(Nx, Ny, latvec_x, latvec_y, unitcell)
+function [x, y] = lat_2d(Nx, Ny, latvec_x, latvec_y, basis)
 % lat.lat_2d  Generate 2D real-space lattice sites.
 %
 %   [x, y] = lat.lat_2d(Nx, Ny, latvec_x, latvec_y, unitcell)
@@ -10,14 +10,14 @@ arguments (Input)
     Ny       (1,1) {mustBeInteger, mustBePositive}
     latvec_x (1,2) double {mustBeReal}
     latvec_y (1,2) double {mustBeReal}
-    unitcell (:,2) double {mustBeReal}
+    basis (:,2) double {mustBeReal}
 end
 arguments (Output)
     x
     y
 end
 
-sublat_num = size(unitcell, 1);
+sublat_num = size(basis, 1);
 x = zeros(Nx, Ny, sublat_num);
 y = zeros(Nx, Ny, sublat_num);
 
@@ -27,8 +27,8 @@ BaseX = X_ind .* latvec_x(1) + Y_ind .* latvec_y(1);
 BaseY = X_ind .* latvec_x(2) + Y_ind .* latvec_y(2);
 
 for s = 1:sublat_num
-    x(:,:,s) = BaseX + unitcell(s,1);
-    y(:,:,s) = BaseY + unitcell(s,2);
+    x(:,:,s) = BaseX + basis(s,1);
+    y(:,:,s) = BaseY + basis(s,2);
 end
 
 end

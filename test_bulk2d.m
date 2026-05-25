@@ -3,7 +3,7 @@
 %unit cell
 basis = [sqrt(3)/3,0;
     2*sqrt(3)/3, 0];
-a0 = 1;
+a0 = sqrt(3)/3;
 
 % lattice vector
 a1 = [sqrt(3)/2, 1/2];
@@ -24,32 +24,32 @@ labels = {'\Gamma','K','M','\Gamma'};
 
 %% triangle
 
-%unit cell
-basis = [[0, 0];              % Site A (Sublattice 1)
-[1/2, sqrt(3)/6];    % Site B (Sublattice 2)
-[0, sqrt(3)/3];];      % Site C (Sublattice 3)
-a0 = 1/sqrt(3);
-% lattice vector
-a1 = [1, 0];
-a2 = [1/2, sqrt(3)/2];
-latvecs = [a1;a2];
-
-% onsite potential
-Delta = 0.3;
-onsite = diag([Delta, 0 , -Delta]);
-
-% hopping dist
-neighbor_order = [1];
-t_ab = -1;
-t_bc = -0.7;
-t_ca = -0.2;
-hops = [1, 2, a0, t_ab;
-        2, 3, a0, t_bc;
-        3, 1, a0, t_ca]; % [i, j, dist, t]
-
-% high symm points
-kpts = {[0,0],[4*pi/3, 0],[pi, pi/sqrt(3)],[0,0]};
-labels = {'\Gamma','K','M','\Gamma'};
+% %unit cell
+% basis = [[0, 0];              % Site A (Sublattice 1)
+% [1/2, sqrt(3)/6];    % Site B (Sublattice 2)
+% [0, sqrt(3)/3];];      % Site C (Sublattice 3)
+% a0 = 1/sqrt(3);
+% % lattice vector
+% a1 = [1, 0];
+% a2 = [1/2, sqrt(3)/2];
+% latvecs = [a1;a2];
+% 
+% % onsite potential
+% Delta = 0.3;
+% onsite = diag([Delta, 0 , -Delta]);
+% 
+% % hopping dist
+% neighbor_order = [1];
+% t_ab = -1;
+% t_bc = -0.7;
+% t_ca = -0.2;
+% hops = [1, 2, a0, t_ab;
+%         2, 3, a0, t_bc;
+%         3, 1, a0, t_ca]; % [i, j, dist, t]
+% 
+% % high symm points
+% kpts = {[0,0],[4*pi/3, 0],[pi, pi/sqrt(3)],[0,0]};
+% labels = {'\Gamma','K','M','\Gamma'};
 %%
 % hops = tb.make_hops(basis, latvecs, neighbor_order, t_vals, doPlot=true);
 
@@ -60,7 +60,7 @@ N_pts = 100;
 band = zeros(size(basis,1),size(k_path,1));
 for k_ind = 1:size(k_path,1)
     k_vec = k_path(k_ind,:);
-    Hk = bloch.blochham(k_vec, basis, latvecs, hops, onsite);
+    Hk = bloch.blochham_2d(k_vec, basis, latvecs, hops, onsite);
     [u,d] = eig((Hk+Hk')/2);
     band(:,k_ind) = sort(diag(d));
 end
