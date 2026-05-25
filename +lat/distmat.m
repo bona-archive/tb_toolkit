@@ -1,5 +1,5 @@
 function D = distmat(x, y)
-% TB.DISTMAT  Pairwise Euclidean distance matrix.
+% lat.distmat  Pairwise Euclidean distance matrix.
 %
 %   D = tb.distmat(x, y)
 %

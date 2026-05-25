@@ -14,8 +14,8 @@ latvec_x = latvecs(1,:);
 latvec_y = latvecs(2,:);
 
 n_range=-1:1;
-[x,y] = tb.lat_2d(length(n_range),length(n_range),latvec_x,latvec_y,basis);
-D = tb.distmat(x(:), y(:));
+[x,y] = lat.lat_2d(length(n_range),length(n_range),latvec_x,latvec_y,basis);
+D = lat.distmat(x(:), y(:));
 unique_dist = unique(D(:));
 [sorted_D, ~] = sort(unique_dist);
 

@@ -1,10 +1,9 @@
 function [x, y] = lat_2d(Nx, Ny, latvec_x, latvec_y, unitcell)
-% TB.LAT2D  Generate 2D real-space lattice sites.
+% lat.lat_2d  Generate 2D real-space lattice sites.
 %
-%   [x, y] = tb.lat2d(Nx, Ny, latvec_x, latvec_y, unitcell)
+%   [x, y] = lat.lat_2d(Nx, Ny, latvec_x, latvec_y, unitcell)
 %
 %   Output x, y are (Nx x Ny x sublat_num) arrays.
-%   Flatten with x(:), y(:) for use with tb.distmat / tb.drawbonds.
 
 arguments (Input)
     Nx       (1,1) {mustBeInteger, mustBePositive}
