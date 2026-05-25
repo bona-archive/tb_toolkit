@@ -24,7 +24,7 @@ if options.doPlot
     for neighbor_order_ind = 1: length(neighbor_order)
         subplot(1,length(neighbor_order),neighbor_order_ind)
         hold on
-        [~,~] = tb.Draw_coupling_graph(x,y,sorted_D(neighbor_order(neighbor_order_ind)+1),options.doPlot);
+        [~,~] = draw.Draw_coupling_graph(x,y,sorted_D(neighbor_order(neighbor_order_ind)+1),options.doPlot);
         axis equal
     end
 else
