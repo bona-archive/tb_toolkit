@@ -8,6 +8,7 @@ clear all
 %% make supercell coords from primitive basis
 Nx = 1;
 Ny = 30;
+latvec_pbc = latvec_x;
 [superlat_2d_x, superlat_2d_y] = lat.lat_2d(Nx, Ny, latvec_x, latvec_y, prim_basis);
 [super_basis, super_sublat, prim_super_sublat_map] = obc.lat_2d2superbasis(superlat_2d_x,superlat_2d_y);
 
@@ -36,7 +37,7 @@ onsite_tmp = Delta*diag(ones(1,Nx*Ny*2));
 t = -1;
 prim_hops = [1,2,a0,t;
         2,1,a0,t];
-latvec_pbc = latvec_x;
+
 [super_hops] = obc.primhop2superhop(prim_hops,superlat_2d_x,superlat_2d_y, latvec_pbc);
 
 band = zeros(kpts, size(superlat_2d_x,2)+size(superlat_2d_y,2));
