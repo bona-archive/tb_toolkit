@@ -10,7 +10,7 @@ arguments (Input)
     Ny       (1,1) {mustBeInteger, mustBePositive}
     latvec_x (1,2) double {mustBeReal}
     latvec_y (1,2) double {mustBeReal}
-    basis (:,2) double {mustBeReal}
+    basis (:,3) double {mustBeReal} % [x,y,s] (x,y)는 좌표, s는 sublattice index
 end
 arguments (Output)
     x

@@ -12,7 +12,7 @@ function [Hk] = blochham_2d(k_vec, basis, latvecs, hops, onsite)
   % - Hk — (n_orb×n_orb) Hermitian 행렬
 arguments (Input)
     k_vec (1,2)
-    basis (:,2)
+    basis (:,3)
     latvecs (:,2)
     hops (:,4)
     onsite (:,:)
@@ -53,13 +53,18 @@ for grid_ind = 1: size(NNcell_grid, 1)
         for i = 1: n_orb
             for j = 1: n_orb
                 % sublattice displacement
-                b1 = basis(i,:);
-                b2 = basis(j,:);
-                d_vec = R + b2 - b1;
+                bi_tmp = basis(i,:);
+                bj_tmp = basis(j,:);
+
+                bi = bi_tmp(1:2);
+                si = bi_tmp(3);
+                bj = bj_tmp(1:2);
+                sj = bj_tmp(3);
+                d_vec = R + bj - bi;
                 dist = norm(d_vec);
 
                 % encoding bloch phase
-                match = hops(:,1) == i & hops(:,2) == j & abs(hops(:,3)-dist)<1e-6;
+                match = hops(:,1) == si & hops(:,2) == sj & abs(hops(:,3)-dist)<1e-6;
                 if any(match)
                     Hk(i,j) = Hk(i,j) + hops(match, 4) * exp(1i * dot(k_vec,d_vec));
                 end

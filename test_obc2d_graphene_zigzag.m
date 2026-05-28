@@ -21,7 +21,7 @@ super_latvecs = [superlatvec_x;superlatvec_y];
 
 figure
 hold on
-[xvec,yvec]=draw.Draw_coupling_graph(superlat_2d_x,superlat_2d_y,a0,true);
+[xvec,yvec]=draw.Draw_coupling_graph(superlat_2d_x,superlat_2d_y,a0,'k',true);
 
 %% k space
 
@@ -38,14 +38,14 @@ t = -1;
 prim_hops = [1,2,a0,t;
         2,1,a0,t];
 
-[super_hops] = obc.primhop2superhop(prim_hops,superlat_2d_x,superlat_2d_y, latvec_pbc);
+% [super_hops] = obc.primhop2superhop(prim_hops,superlat_2d_x,superlat_2d_y, latvec_pbc);
 
 band = zeros(kpts, size(superlat_2d_x,2)+size(superlat_2d_y,2));
 eigenstates = zeros(kpts, size(superlat_2d_x,2)+size(superlat_2d_y,2), size(superlat_2d_x,2)+size(superlat_2d_y,2));
 
 for k_ind = 1:length(kk)
     k_vec = kk(k_ind) * reci_x;
-    [Hk] = bloch.blochham_2d(k_vec, super_basis, latvec_pbc, super_hops, onsite_tmp);
+    [Hk] = bloch.blochham_2d(k_vec, super_basis, latvec_pbc, prim_hops, onsite_tmp);
     [u,d] = eig((Hk+Hk')/2);
     band(k_ind,:) = diag(d);
     eigenstates(k_ind,:,:) = u;

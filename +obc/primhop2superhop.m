@@ -8,17 +8,17 @@ super_hops = [];
 for hops_ind = 1: size(prim_hops,1)
     hop = prim_hops(hops_ind,:);
 
-    si = hop(1);
-    sj = hop(2);
-    dist_ij = hop(3);
-    t_ij = hop(4);
-
-    I_sites = find(prim_super_sublat_map(:,1) == si);
-    J_sites = find(prim_super_sublat_map(:,1) == sj);
-    for I_ind = 1:length(I_sites)
-        I = I_sites(I_ind);
-        for J_ind = 1:length(J_sites)
-            J = J_sites(J_ind);
+    % si = hop(1);
+    % sj = hop(2);
+    % dist_ij = hop(3);
+    % t_ij = hop(4);
+    % 
+    % I_sites = find(prim_super_sublat_map(:,1) == si);
+    % J_sites = find(prim_super_sublat_map(:,1) == sj);
+    % for I_ind = 1:length(I_sites)
+    %     I = I_sites(I_ind);
+    %     for J_ind = 1:length(J_sites)
+    %         J = J_sites(J_ind);
             for n1 = -1:1
                 d = n1*latvec_pbc + super_basis(J,:) - super_basis(I,:);
                 if abs(norm(d)-dist_ij) < 1e-4
@@ -26,8 +26,8 @@ for hops_ind = 1: size(prim_hops,1)
                 else
                 end
             end
-        end
-    end
+    %     end
+    % end
 end
 super_hops = unique(super_hops, 'rows');
 end

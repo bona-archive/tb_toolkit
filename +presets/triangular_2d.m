@@ -1,7 +1,7 @@
 function [basis,latvec_x,latvec_y,latvecs, a0] = triangular_2d()
 
 % basis
-basis = [0, 0];
+basis = [0, 0, 1];
 
 a0 = 1;
 
