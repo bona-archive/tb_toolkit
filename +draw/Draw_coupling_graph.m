@@ -1,5 +1,5 @@
-function [xvec, yvec] = Draw_coupling_graph(x,y,dist,doPlot)
-    if nargin < 4 || isempty(doPlot)
+function [xvec, yvec] = Draw_coupling_graph(x,y,dist,color,doPlot)
+    if nargin < 5 || isempty(doPlot)
         doPlot = true;
     end
     ind1i=[];ind2i=[];
@@ -26,7 +26,7 @@ function [xvec, yvec] = Draw_coupling_graph(x,y,dist,doPlot)
     if doPlot
     
         % figure
-        line(xvec,yvec,'Color','k');
+        line(xvec,yvec,'Color',color);
         hold on
         scatter(x,y,'k','filled')
         axis equal

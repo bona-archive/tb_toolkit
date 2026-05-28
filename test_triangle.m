@@ -7,8 +7,8 @@ clear all
 [basis,latvec_x,latvec_y,latvecs, a0] = presets.triangular_2d();
 
 % make supercell coords from primitive basis
-Nx = 2;
-Ny = 2;
+Nx = 10;
+Ny = 10;
 [x, y] = lat.lat_2d(Nx, Ny, latvec_x, latvec_y, basis);
 figure
 [xvec,yvec] = draw.Draw_coupling_graph(x,y,a0,true);
