@@ -1,7 +1,7 @@
 function [hops] = dist_decay_hops(basis, latvecs, neighbor_order, t, gamma, options)
 
 arguments (Input)
-    basis (:,2)
+    basis (:,3)
     latvecs (2,2)
     neighbor_order (1,:)
     t (1,1)

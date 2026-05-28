@@ -31,8 +31,10 @@ kk = linspace(-0.5,0.5,kpts);
 
 %% solve eigen value problem for each k
 
-Delta = 0;
-onsite_tmp = Delta*diag(ones(1,Nx*Ny*2));
+Delta1 = 0;
+Delta2 = 0;
+Delta_vec = [Delta1, Delta2];
+onsite_tmp = bloch.build_onsite(super_basis,Delta_vec);
 
 t = -1;
 prim_hops = [1,2,a0,t;
