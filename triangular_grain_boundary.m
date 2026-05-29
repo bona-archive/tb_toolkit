@@ -36,7 +36,7 @@ Delta_vec = [Delta1, Delta2];
 onsite = bloch.build_onsite(basis_grainAB,Delta_vec);
 
 t = -0.5;
-t_AB = -0.5;
+t_AB = -1;
 hops = [1,2,a0,t;
         2,1,a0,t;
         1,2,dist_ABcoupling,t_AB;

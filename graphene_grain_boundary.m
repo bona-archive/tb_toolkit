@@ -57,15 +57,22 @@ end
 draw.Draw_coupling_graph(test_basis(:,1),test_basis(:,2),a0,'k',true);
 %% build hop, onsite for supercell
 
-Delta1 = 0;
-Delta2 = 2;
+Delta1 = 1;
+Delta2 = -1;
 Delta_vec = [Delta1, Delta2];
 onsite = bloch.build_onsite(basis_AB, Delta_vec);
 
-t = -1;
+t = 1;
+t1 = 0.12;
+a1 = norm(latvec_x_preset);
 hops = [1,2,a0,t;
-        2,1,a0,t];
-
+        2,1,a0,t;
+        2,2,a0,t;
+        1,1,a1,t1;
+        2,2,a1,t1];
+% hops = [1,2,a0,t;
+%         2,1,a0,t;
+%         2,2,a0,t];
 %% build bloch Hamiltonian
 
 [reci_x,reci_y]=to.prim2reci(latvec_x,latvec_y);
@@ -73,13 +80,16 @@ k_pts = 100;
 kk = linspace(-1/2,1/2,k_pts);
 
 band = zeros(k_pts, size(basis_AB,1));
+eigenstate = zeros(k_pts, size(basis_AB,1), size(basis_AB,1));
 for k_ind = 1: length(kk)
     k_vec = kk(k_ind)*reci_y;
     [Hk] = bloch.blochham_2d(k_vec,basis_AB,latvec_pbc, hops, onsite);
     [u,d] = eig(Hk);
     band(k_ind,:)=diag(d);
+    eigenstate(k_ind,:,:) = u;
 end
 
 figure
 hold on
 plot(kk, band)
+

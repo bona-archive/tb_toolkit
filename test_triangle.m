@@ -11,7 +11,7 @@ Nx = 10;
 Ny = 10;
 [x, y] = lat.lat_2d(Nx, Ny, latvec_x, latvec_y, basis);
 figure
-[xvec,yvec] = draw.Draw_coupling_graph(x,y,a0,true);
+[xvec,yvec] = draw.Draw_coupling_graph(x,y,a0,'k',true);
 
 % onsite potential
 onsite = diag([0]);
