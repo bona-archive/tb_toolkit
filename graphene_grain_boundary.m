@@ -1,5 +1,8 @@
 clear all
 close all
+%% 
+
+load("+custom_colorbar/CustomColormap.mat")
 %% build basis with grain boundary
 
 [basis,latvec_x_preset,~,~, a0]=presets.graphene_2d();
@@ -40,10 +43,32 @@ for i = 1: N_iter
 end
 
 basis_AB = symmop.merge(basis_grainA, basis_grainB);
+
+%% build hop, onsite for supercell
+
+Delta1 = 5;
+Delta2 = 0;
+Delta_vec = [Delta1, Delta2];
+onsite = bloch.build_onsite(basis_AB, Delta_vec);
+
+t = 0;
+t1 = 0.5;
+a1 = norm(latvec_x_preset);
+hops = [1,2,a0,t;
+        2,1,a0,t;
+        2,2,a0,t;
+        1,1,a1,t1;
+        2,2,a1,t1];
+% hops = [1,2,a0,t;
+%         2,1,a0,t;
+%         2,2,a0,t];
+% hops = [
+%         1,1,a1,t1;
+%         2,2,a1,t1];
 %% test draw supercell
 
 figure
-draw.Draw_coupling_graph(basis_AB(:,1), basis_AB(:,2), a0,'k', true);
+draw.Draw_coupling_graph(basis_AB(:,1), basis_AB(:,2), basis_AB(:,3), hops, true,basis_AB(:,3));
 
 %% find grain boundary index using mask
 
@@ -64,7 +89,7 @@ corners = [left_bot;
            left_bot];
 figure
 hold on
-draw.Draw_coupling_graph(basis_AB(:,1), basis_AB(:,2), a0,'k', true);
+draw.Draw_coupling_graph(basis_AB(:,1), basis_AB(:,2), basis_AB(:,3), hops, true,basis_AB(:,3));
 plot(corners(:,1), corners(:,2))
 
 in = inpolygon(basis_AB(:,1),basis_AB(:,2),corners(1:4,1),corners(1:4,2));
@@ -80,25 +105,10 @@ latvec_pbc = latvec_y;
 for iter = 1: test_iter
     test_basis = symmop.translate(test_basis,latvec_pbc);
 end
-draw.Draw_coupling_graph(test_basis(:,1),test_basis(:,2),a0,'k',true);
-%% build hop, onsite for supercell
+draw.Draw_coupling_graph(test_basis(:,1),test_basis(:,2),test_basis(:,3), hops,true,test_basis(:,3));
+% colormap([1,0,0;0,0,1])
+% draw.Draw_coupling_graph(test_basis(:,1),test_basis(:,2),1,'k',true,test_basis(:,3));
 
-Delta1 = 1;
-Delta2 = -1;
-Delta_vec = [Delta1, Delta2];
-onsite = bloch.build_onsite(basis_AB, Delta_vec);
-
-t = 1;
-t1 = 0.12;
-a1 = norm(latvec_x_preset);
-hops = [1,2,a0,t;
-        2,1,a0,t;
-        2,2,a0,t;
-        1,1,a1,t1;
-        2,2,a1,t1];
-% hops = [1,2,a0,t;
-%         2,1,a0,t;
-%         2,2,a0,t];
 %% build bloch Hamiltonian
 
 [reci_x,reci_y]=to.prim2reci(latvec_x,latvec_y);
@@ -125,41 +135,49 @@ plot(kk, band)
 %%
 
 % grain boundary amplitude를 색깔로 나타낸 full band 플롯
+
 figure
 hold on
 X = repmat(kk',1,size(band,2));
 X = X(:);
 scatter(X, band(:), 12, Wgb(:), 'filled');
-colorbar; xlabel('k'); ylabel('E');
+colormap(CustomColormap)
+
+colorbar; xlabel('k_y'); ylabel('E_{k_y}');
+%% 
 
 % grain boundary amplitude로 선별된 밴드
-edge_band1 = band(:,1);
-edge_band2 = band(:,end);
-edge_band_diff = diff(edge_band1);
-tol_diff = 0.0001;
-diff0_ind = find(abs(edge_band_diff) < tol_diff);
+edge_inds = find(sum(Wgb,1)>mean(sum(Wgb,1))+3*std(sum(Wgb,1)));
 
-% scanning omega 선별
-omega0 = edge_band1(diff0_ind);
-
-% LDOS 계산
-eta = 1e-5;
-rho = zeros(size(basis_AB,1),1);
-for k_ind = 1:k_pts
-    u_tmp = squeeze(eigenstate(k_ind,:,:));
-    d_tmp = squeeze(band(k_ind,:));
-    rho = rho + sum(abs(u_tmp).^2 .* (-1/pi)*imag(1./(omega0-diag(d_tmp).'+1i*eta)), 2);
+for edge_ind = edge_inds
+    edge_band1 = band(:,edge_ind);
+    % edge_band2 = band(:,end);
+    edge_band_diff = diff(edge_band1);
+    tol_diff = 0.0001;
+    diff0_ind = find(abs(edge_band_diff) < tol_diff)
+    
+    % scanning omega 선별
+    omega0 = edge_band1(diff0_ind);
+    
+    % LDOS 계산
+    eta = 1e-5;
+    rho = zeros(size(basis_AB,1),1);
+    for k_ind = 1:k_pts
+        u_tmp = squeeze(eigenstate(k_ind,:,:));
+        d_tmp = squeeze(band(k_ind,:));
+        rho = rho + sum(abs(u_tmp).^2 .* (-1/pi)*imag(1./(omega0-diag(d_tmp).'+1i*eta)), 2);
+    end
+    
+    rho = rho/k_pts;
+    
+    
+    figure
+    hold on
+    % draw.Draw_coupling_graph(basis_AB(:,1), basis_AB(:,2), basis_AB(:,3),hops,true,basis_AB(:,3));
+    
+    scatter(basis_AB(:,1), basis_AB(:,2), 40, rho, 'filled')
+    colorbar
+    colormap(CustomColormap)
+    axis equal off
+    plot(basis_AB(:,1),rho/max(abs(rho))+1,'k')
 end
-
-rho = rho/k_pts;
-
-
-figure
-hold on
-[xvec,yvec] = draw.Draw_coupling_graph(basis_AB(:,1), basis_AB(:,2), a0, 'k',false);
-line(xvec,yvec,'Color','k')
-scatter(basis_AB(:,1), basis_AB(:,2), 40, rho, 'filled')
-colorbar
-axis equal
-
-
